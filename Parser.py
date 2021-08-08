@@ -1,5 +1,3 @@
-from Code import Code 
-from typing import NewType 
 class Parser : 
     def __init__(self,file_path) : 
         with open(file_path,"r") as file : 
@@ -48,7 +46,9 @@ class Parser :
             return self.current_cmd.strip("(").strip(")") 
     def dest(self)->str  :
         if self.commandTypes()=="C_COMMAND": 
-          return   self.current_cmd.strip("=").strip(";")[0]
+            if "=" in self.current_cmd: 
+                return self.current_cmd.split("=")[0]
+            else : return "null" 
 
     def comp(self)-> str  : 
         if self.commandTypes()=="C_COMMAND": 
@@ -62,10 +62,10 @@ class Parser :
             if ";" in self.current_cmd : 
                 return self.current_cmd.split(";")[1]
             else :  
-                return None 
+                return "null" 
 
 if __name__ == "__main__" : 
-    parse = Parser("../pong/PongL.asm") 
+    parse = Parser("../add/Add.asm") 
     while parse.hasMoreCommands() : 
         parse.advance() 
         print("\n") 

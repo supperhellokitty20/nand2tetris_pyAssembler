@@ -1,5 +1,7 @@
+
+
 class Code : 
-    def dest(field) :  
+    def dest(field:str) :  
         dest = {
         "null": "000",
         "M": "001",
@@ -12,7 +14,7 @@ class Code :
         }
         for key in dest.keys() :  
             if field == key : return dest[key] 
-        if field is None :  return dest["null"]
+
 
     def comp(field:str) : 
         comp = {
@@ -48,21 +50,20 @@ class Code :
         for key in comp.keys() :  
             if field == key : return comp[key] 
 
-    def jump(field) : 
+    def jump(field:str)->str : 
 
         jump = {
-        "null": "000",
-        "jgt": "001",
-        "jeq": "010",
-        "jge": "011",
-        "jlt": "100",
-        "jne": "101",
-        "jle": "110",
-        "jmp": "111"
+            "null": "000",
+            "jgt": "001",
+            "jeq": "010",
+            "jge": "011",
+            "jlt": "100",
+            "jne": "101",
+            "jle": "110",
+            "jmp": "111"
         }
         for key in jump.keys() :  
-            if field == key : return jump[key] 
-        if field is None : return jump["null"]
+            if field.lower() == key : return jump[key] 
 
 #Testings 
 if __name__=="__main__": 

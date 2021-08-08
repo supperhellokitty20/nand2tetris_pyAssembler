@@ -1,51 +1,53 @@
 #!/usr/bin/python3
-#%%
 import sys
-from typing import Optional
 from Parser import Parser 
 from Code import Code 
-
+from pathlib import PurePath 
+import os 
 def translateA(cmd:str) -> str : 
     bin = "{0:b}".format(int(cmd)) 
-    diff = 13-len(bin) 
-    add="000"
-    for _ in range(diff) : 
-        add+="0"
-    return add+bin
-def translateC(dest:str , comp:str , jump) ->str : 
-    return "111"+Code.dest(dest)+Code.comp(comp)+Code.jump(jump) 
+    result = "0"+bin 
+    while len(result)<16: 
+        result = "0"+result
+    return result     
 
-if __name__=="__main__":      
-    #Production 
-    '''
-    if len(sys.argv)<2 or sys.argv[1][-4:]!=".asm": 
-        print("You need to input .asm file") 
-    else :  
-        print("Working ...") 
-        f = Parser(sys.argv[1]) 
-        f.advance() 
-        print(f.current_cmd) 
-        print("Loading .asm file to the assembler ...") 
+def translateC(dest , comp:str , jump) ->str : 
+    bin_dest = Code.dest(dest) 
+    bin_comp = Code.comp(comp) 
+    bin_jump = Code.jump(jump) 
+    return "111"+bin_comp+bin_dest+bin_jump
 
-    '''
-    #Debug 
-    print("Loading .asm file to the assembler ...") 
-    parse = Parser("../pong/PongL.asm") 
-    f_name = "Pong.hack"
+def main(path:str) : 
+    parse = Parser(path) 
     out ="" 
     while parse.hasMoreCommands() : 
         parse.advance() 
         if parse.commandTypes() =="A_COMMAND": 
-           out+= translateA(parse.symbol())+"\n" 
+            out+= translateA(parse.symbol())+"\n" 
         if parse.commandTypes()=="C_COMMAND": 
             current_dest = parse.dest()
             current_comp= parse.comp()
             current_jump= parse.jump() 
-            
             out+=translateC(current_dest,current_comp,current_jump)+"\n" 
-    print(out) 
-    with open(f_name,"w") as file : 
+    return out 
+if __name__=="__main__":      
+    #Production 
+    print("Cant handle symbol") 
+    file_name =PurePath(sys.argv[1]).name[:-4]+".hack" 
+
+    print("out putting to file" ,file_name) 
+    if len(sys.argv)<2 or sys.argv[1][-4:]!=".asm": 
+        print("You need to input .asm file") 
+    else :  
+       out=  main(sys.argv[1]) 
+       print(out) 
+
+    #Make an output directory 
+    if not os.path.isdir("out")  : 
+        os.mkdir("out") 
+    out_path = "./out/"+file_name 
+
+    with open(out_path,"w") as file : 
         file.write(out) 
         file.close() 
-
-# %%
+    #Debug 
