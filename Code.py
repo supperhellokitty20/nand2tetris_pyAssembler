@@ -1,5 +1,4 @@
 
-
 class Code : 
     def dest(field:str) :  
         dest = {
@@ -48,7 +47,7 @@ class Code :
         "D|M": "1010101"
         }
         for key in comp.keys() :  
-            if field == key : return comp[key] 
+            if field.strip() == key : return comp[key] 
 
     def jump(field:str)->str : 
 
@@ -63,7 +62,7 @@ class Code :
             "jmp": "111"
         }
         for key in jump.keys() :  
-            if field.lower() == key : return jump[key] 
+            if field.lower().strip() == key : return jump[key] 
 
 #Testings 
 if __name__=="__main__": 

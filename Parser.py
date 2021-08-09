@@ -24,17 +24,16 @@ class Parser :
             while self._is_trash(tmp) : 
                 tmp = self.file[self.lin_num]  
                 self.lin_num+=1
-            self.current_cmd=tmp.strip().strip("\n").split("\\")[0] # this assembler only allow comment after the code for inline comment 
+            self.current_cmd=tmp.strip().strip("\n").split("//")[0] # this assembler only allow comment after the code for inline comment 
         return None 
     #Ignore breakline line symbol and comment  
     #Return type of command  
     def commandTypes(self)->str :  
         if self.current_cmd[0]=="@":  
             return "A_COMMAND"
-        if len(self.current_cmd.strip("=").strip(";"))>2: 
-            return "C_COMMAND"
-        else : 
-            return "L_COMMAND" 
+        if self.current_cmd[0]=="(" and self.current_cmd[-1]==")" : 
+            return "L_COMMAND"
+        else : return "C_COMMAND"
             
 
     def symbol(self) ->str : 
@@ -53,7 +52,7 @@ class Parser :
     def comp(self)-> str  : 
         if self.commandTypes()=="C_COMMAND": 
             if "=" in self.current_cmd : 
-                return self.current_cmd.split("=")[1].split(";")[0]
+                return self.current_cmd.split("=")[1].split(";")[0].strip().strip("\n") 
             else : 
                 return self.current_cmd.split(";")[0]
 
@@ -65,17 +64,13 @@ class Parser :
                 return "null" 
 
 if __name__ == "__main__" : 
-    parse = Parser("../add/Add.asm") 
+    parse = Parser("../max/Max.asm") 
+    lin = -1 
     while parse.hasMoreCommands() : 
         parse.advance() 
-        print("\n") 
         print(parse.current_cmd) 
-        print(parse.commandTypes()) 
-        print("\n") 
-        print("SYM",parse.symbol()) 
-        print("DES",parse.dest()) 
-        print("COMP",parse.comp()) 
-        print("JMP",parse.jump()) 
+        lin+=1
+        print(lin) 
 
 
 
